@@ -1,6 +1,3 @@
-// The provided course information.
-
-
 /**
  * NOTE: !!! means important when addressing issues
  * 
@@ -9,7 +6,7 @@ const CourseInfo = {
     id: 451,
     name: "Introduction to JavaScript"
   };
-  
+
 // The provided assignment group.
 const AssignmentGroup = {
     id: 12345,
@@ -85,11 +82,9 @@ const LearnerSubmissions = [
       }
     }
   ];
-
 /**
  * This problem is reminiscent of a relational databse in sql where you use a header of one column in one table to get
  * the information of another table 
- * 
  */
 
 /**
@@ -103,6 +98,7 @@ const LearnerSubmissions = [
  * FOR LEARNER ID:132 AND ID:125 ONLY HAD 1 SUBMISSION RESPECTIVELY (SHOWN LATER IN DEBUGGING) AND EVERYTHING ELSE
  * NOT BEING DUE
  */
+
 //takes in LearnerSubmissions and AssignmentGroup repsectively changing the values through reference
 function dueStatus(arr, arr2){
     for(let i = 0; i < arr.length; i++){
