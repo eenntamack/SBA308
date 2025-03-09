@@ -8,7 +8,7 @@
  * 
  */
 const CourseInfo = {
-    id: 4591,
+    id: 451,
     name: "Introduction to JavaScript"
   };
   
@@ -43,46 +43,46 @@ const AssignmentGroup = {
 // The provided learner submission data.
 const LearnerSubmissions = [
     {
-        learner_id: 125,
-        assignment_id: 1,
-        submission: {
+      learner_id: 125,
+      assignment_id: 1,
+      submission: {
         submitted_at: "2023-01-25",
         score: 47
-        }
+      }
     },
     {
-        learner_id: 125,
-        assignment_id: 2,
-        submission: {
-        submitted_at: "2023-02-27",
+      learner_id: 125,
+      assignment_id: 2,
+      submission: {
+        submitted_at: "2023-02-12",
         score: 150
-        }
+      }
     },
     {
-        learner_id: 125,
-        assignment_id: 3,
-        submission: {
+      learner_id: 125,
+      assignment_id: 3,
+      submission: {
         submitted_at: "2023-01-25",
         score: 400
-        }
+      }
     },
     {
-        learner_id: 132,
-        assignment_id: 1,
-        submission: {
-        submitted_at: "2023-01-25",
+      learner_id: 132,
+      assignment_id: 1,
+      submission: {
+        submitted_at: "2023-01-24",
         score: 39
-        }
+      }
     },
     {
-        learner_id: 132,
-        assignment_id: 2,
-        submission: {
+      learner_id: 132,
+      assignment_id: 2,
+      submission: {
         submitted_at: "2023-03-07",
         score: 140
-        }
+      }
     }
-];
+  ];
 
 /**
  * This problem is reminiscent of a relational databse in sql where you use a header of one column in one table to get
@@ -141,12 +141,6 @@ function onlyAssignmentsSubmitted(arr){
 let neededSubmissions = onlyAssignmentsSubmitted(LearnerSubmissions);
 console.log(neededSubmissions);
 
-function extractAssignment(arr){
-    let ids = []
-    for(let i = 0; i < arr.length; i++){
-        ids.push(arr[i].id)
-    }
-}
 
 function groupLearners(arr){
     const group = []
@@ -236,6 +230,7 @@ function getLearnerData(CourseInfo,AssignmentGroup,LearnerSubmission){
 
     let submissions = [];
     let weighted = [];
+    let output = [];
     if(CourseInfo.id != AssignmentGroup.course_id){
         throw("Course Info and Groups do not match!")
     }
@@ -246,13 +241,27 @@ function getLearnerData(CourseInfo,AssignmentGroup,LearnerSubmission){
 
     submissions =  onlyAssignmentsSubmitted(LearnerSubmission)
 
-    let learnerGroup = groupLearners(submissions);
+    submissions = groupLearners(submissions);
 
-    weighted = weightedAvg(learnerGroup,AssignmentGroup)
+    weighted = weightedAvg(submissions,AssignmentGroup)
 
-    
-
-
-    
-
+    for(let i = 0; i < submissions.length; i ++){
+        if(!output[i]){
+            output[i] = {}
+        }
+        output[i].id = submissions[i][0].learner_id
+        output[i].avg = weighted[i]
+        for(let j = 0; j < submissions[i].length; j++){
+                if(!output[i][submissions[i][j].assignment_id]){
+                    output[i][submissions[i][j].assignment_id] = 0
+                }
+                output[i][submissions[i][j].assignment_id] = submissions[i][j].ratio
+               
+        }
+        
+    }   
+    return(output);
 }
+
+
+console.log(getLearnerData(CourseInfo,AssignmentGroup,LearnerSubmissions))
