@@ -8,7 +8,7 @@
  * 
  */
 const CourseInfo = {
-    id: 451,
+    id: 4591,
     name: "Introduction to JavaScript"
   };
   
@@ -54,7 +54,7 @@ const LearnerSubmissions = [
         learner_id: 125,
         assignment_id: 2,
         submission: {
-        submitted_at: "2023-02-12",
+        submitted_at: "2023-02-27",
         score: 150
         }
     },
@@ -70,7 +70,7 @@ const LearnerSubmissions = [
         learner_id: 132,
         assignment_id: 1,
         submission: {
-        submitted_at: "2023-01-24",
+        submitted_at: "2023-01-25",
         score: 39
         }
     },
@@ -86,7 +86,7 @@ const LearnerSubmissions = [
 
 /**
  * This problem is reminiscent of a relational databse in sql where you use a header of one column in one table to get
- * the information of another table that shares that same header
+ * the information of another table 
  * 
  */
 
@@ -112,15 +112,13 @@ function dueStatus(arr, arr2){
     //return arr
 }
 dueStatus(LearnerSubmissions,AssignmentGroup);
-/** 
-function isThisAssignmentDue(arr1, arr2){
-    for(let i = 0; i < arr.length)
 
-}*/
 function calculateLatescore(arr){
     let x = 0
     while(x < arr.length){
         if(arr[x].status === "late"){
+            console.log(arr[x].submission.score)
+            console.log(arr[x].submission.score * 0.10)
             arr[x].submission.score = arr[x].submission.score - (arr[x].submission.score  * 0.10)
             console.log(arr[x].submission.score)
         }
@@ -130,7 +128,7 @@ function calculateLatescore(arr){
 }
 
 calculateLatescore(LearnerSubmissions);
-function onlyAssignmentsSubmittd(arr){
+function onlyAssignmentsSubmitted(arr){
     let assignments = []
     for(let i = 0; i < arr.length; i++){
         if(arr[i].status === "late" || arr[i].status === "ontime"){
@@ -140,7 +138,8 @@ function onlyAssignmentsSubmittd(arr){
     return assignments
 }
 
-let neededSubmissions = onlyAssignmentsSubmittd(LearnerSubmissions);
+let neededSubmissions = onlyAssignmentsSubmitted(LearnerSubmissions);
+console.log(neededSubmissions);
 
 function extractAssignment(arr){
     let ids = []
@@ -153,10 +152,12 @@ function groupLearners(arr){
     const group = []
     let learner = 0  
     for(let i = 0; i < arr.length; i++){
+        arr.sort(function(a,b){return a.learner_id-b.learner_id})
         if (!group[learner]) {
             group[learner] = [];
         }
         if( i == 0 || group[learner][0].learner_id == arr[i].learner_id){
+            
             group[learner].push(arr[i]);
         }else{
             learner += 1;
@@ -168,18 +169,47 @@ function groupLearners(arr){
     }
     return group
 }
-/** 
-function ExpectedTotalGrade(Asg){
-    while()
 
-}*/
 function weightedAvg(arr,arr2){
     let expected = 0;
     let outcome = 0;
+    let weighted = [];
+    let average = 0;
     for(let i = 0;i < arr.length; i++){
-        expected += arr[i].submissions.i
+        for(let k = 0; k < arr[i].length; k++){
+            if(typeof arr[i][k].submission.score != 'number'){
+                throw ("scores in data are not a number")
+            }
+            expected += arr[i][k].submission.score
+            for(let j = 0; j <arr2.assignments.length; j++){
+                if(arr2.assignments[j].id == arr[i][k].assignment_id ){
+                    if(typeof arr2.assignments[j].points_possible != 'number'){
+                        throw ("scores in data are not a number")
+                    }
+                    outcome += arr2.assignments[j].points_possible;
+                    break;
+                }
+            }
+        }
+
+        try{
+            average = expected / outcome;
+        }catch(err){
+            throw ("Number cannot be divided / problem occured when calculating average");
+        }
+
+        if(typeof average != 'number'){
+            throw ("score or points possible is not type \'number\'")
+        }
+
+        weighted.push({avg : expected / outcome , });
     }
+    return weighted
 }
+console.log("Grouped Learners Weighted Avg")
+console.log(weightedAvg(groupLearners(neededSubmissions),AssignmentGroup));
+
+//console.log(weightedAvg(LearnerSubmissions,AssignmentGroup))
 function createGrades(arr,arr2){
     let ratio = 0
     for(let i= 0; i < arr.length; i++){
@@ -202,10 +232,27 @@ function createGrades(arr,arr2){
 createGrades(groupLearners(LearnerSubmissions),AssignmentGroup)
 console.log(createGrades(groupLearners(LearnerSubmissions),AssignmentGroup));
 //console.log(LearnerSubmissions[0].ratio)
-function getLearnerData(CI,Asg,Ls){
+function getLearnerData(CourseInfo,AssignmentGroup,LearnerSubmission){
 
-    //First I use the course info to access
-    let learnerGroup = groupLearners(LearnerSubmissions);
+    let submissions = [];
+    let weighted = [];
+    if(CourseInfo.id != AssignmentGroup.course_id){
+        throw("Course Info and Groups do not match!")
+    }
+
+    dueStatus(LearnerSubmission,AssignmentGroup);
+
+    calculateLatescore(LearnerSubmission);
+
+    submissions =  onlyAssignmentsSubmitted(LearnerSubmission)
+
+    let learnerGroup = groupLearners(submissions);
+
+    weighted = weightedAvg(learnerGroup,AssignmentGroup)
+
+    
+
+
     
 
 }
