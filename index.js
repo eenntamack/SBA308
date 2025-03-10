@@ -101,6 +101,7 @@ const LearnerSubmissions = [
 
 //takes in LearnerSubmissions and AssignmentGroup repsectively changing the values through reference
 function dueStatus(arr, arr2){
+    console.log("debugging______Comparing and showing dates_________________")
     for(let i = 0; i < arr.length; i++){
         for (let k = 0; k < arr2.assignments.length;k++){
             if(arr[i].assignment_id == arr2.assignments[k].id){
@@ -108,6 +109,7 @@ function dueStatus(arr, arr2){
                 let submission = new Date(arr2.assignments[k].due_at)
                if(submission < dueDate){
                     arr[i].status = "late";
+                    
                     console.log(`status for assingment_id: ${arr[i].assignment_id} is late`)
                     console.log(`submission date: ${submission} | due date: ${dueDate}`);
                     console.log();
@@ -125,6 +127,7 @@ function dueStatus(arr, arr2){
             } 
         }
     }
+    console.log("________________________________")
 }
 
 /**!!!!!!! issue addressed whe SUBMISSION/DUE_AT/SUBMITTED_AT result !!!!!!!
@@ -138,8 +141,11 @@ dueStatus(LearnerSubmissions,AssignmentGroup);
 //--takes in LearnerSubmissions
 function calculateLatescore(arr){
     let x = 0
+    console.log("_______________________")
+    console.log("Debugging : calculating late scores")
     while(x < arr.length){
         if(arr[x].status === "late"){
+            console.log("Below shows 1. original score, 2. 10% of that score and, 3. its new score after deducting 10% from it ")
             console.log(arr[x].submission.score)
             console.log(arr[x].submission.score * 0.10)
             arr[x].submission.score = arr[x].submission.score - (arr[x].submission.score  * 0.10)//<----
@@ -152,7 +158,6 @@ function calculateLatescore(arr){
 //Probably not the best name for a function, but used this to calculate any  submissions 
 //handded in on time or later so they onyl appeared in the array
 
-calculateLatescore(LearnerSubmissions);
 function onlyAssignmentsSubmitted(arr){
     let assignments = []
     for(let i = 0; i < arr.length; i++){
@@ -164,8 +169,7 @@ function onlyAssignmentsSubmitted(arr){
 }
 
 let neededSubmissions = onlyAssignmentsSubmitted(LearnerSubmissions);
-console.log("Debugging : showing only on time or late assignments")
-console.log(neededSubmissions);
+
 
 
 //Next I grouped the dictinaries by learner_id , where only the dictionaires with the same learner_id appear in the same index of 
@@ -204,6 +208,8 @@ function weightedAvg(arr,arr2){
     let outcome = 0;
     let weighted = [];
     let average = 0;
+    console.log("_____________________")    
+    console.log("debugging weightedAvg function")
     for(let i = 0;i < arr.length; i++){
         for(let k = 0; k < arr[i].length; k++){
             //handles if any score or points_possible is not a number or the calculation is not doable
@@ -244,11 +250,9 @@ function weightedAvg(arr,arr2){
 
         weighted.push({avg : expected / outcome });
     }
+    console.log("_____________________")
     return weighted
 }
-console.log("Grouped Learners Weighted Avg")
-
-console.log(weightedAvg(groupLearners(neededSubmissions),AssignmentGroup));
 
 //console.log(weightedAvg(LearnerSubmissions,AssignmentGroup))
 function createGrades(arr,arr2){
@@ -294,7 +298,7 @@ function getLearnerData(CourseInfo,AssignmentGroup,LearnerSubmission){
     weighted = weightedAvg(submissions,AssignmentGroup)
 
     //Below the 'mapping' happens
-
+    console.log()
     for(let i = 0; i < submissions.length; i ++){
         if(!output[i]){
             output[i] = {}
@@ -309,9 +313,11 @@ function getLearnerData(CourseInfo,AssignmentGroup,LearnerSubmission){
         } 
     }   
     return(output);
+    
 }
 
 
 console.log(getLearnerData(CourseInfo,AssignmentGroup,LearnerSubmissions))
+
 
 //One common mistake I keep running myself into was putting the wrong variable iterater in an index and setting an undefined array/index
